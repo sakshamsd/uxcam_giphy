@@ -13,12 +13,15 @@ import { Input } from "../components/Input";
 import { useGiphySearch } from "../hooks/useGifSearch";
 import useDebounce from "../hooks/useDebounce";
 import { Skeleton } from "../components/Skeleton";
+import { ITEMS_PER_PAGE } from "../constants";
+import PaginationComponent from "../components/PaginationComponent";
 
 const GiphySearch = () => {
     const [query, setQuery] = useState("");
     const [page, setPage] = useState(1);
     const location = useLocation();
     const { gifs, loading, error, searchGifs, fetchTrendingGifs } = useGiphySearch();
+    // const [pagesList, setPagesList] = useState<Array<number>>([]);
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
@@ -39,6 +42,11 @@ const GiphySearch = () => {
         }
     }, [debounceQuery, page]);
 
+    useEffect(() => {
+        const totalCount = gifs?.pagination.total_count || 0;
+        const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+    }, [gifs?.pagination, page]);
+
     const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         setQuery(e.target.value);
@@ -46,6 +54,7 @@ const GiphySearch = () => {
     };
 
     const handlePageChange = (newPage: number) => {
+        console.log(newPage);
         setPage(Math.max(1, newPage));
     };
 
@@ -85,21 +94,11 @@ const GiphySearch = () => {
             </div>
 
             {gifs && (
-                <Pagination>
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious onClick={() => handlePageChange(page - 1)} />
-                        </PaginationItem>
-
-                        <PaginationItem>
-                            <PaginationLink isActive>{page}</PaginationLink>
-                        </PaginationItem>
-
-                        <PaginationItem>
-                            <PaginationNext onClick={() => handlePageChange(page + 1)} />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
+                <PaginationComponent
+                    totalPages={50}
+                    currentPage={page}
+                    handlePageChange={handlePageChange}
+                />
             )}
         </div>
     );
