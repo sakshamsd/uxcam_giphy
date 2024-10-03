@@ -4,7 +4,8 @@ import { BrowserRouter } from "react-router-dom";
 function App() {
     return (
         <BrowserRouter>
-            <div className="bg-blue-50 h-screen">
+            <div className=" h-screen">
+              
                 <GiphySearch />
             </div>
         </BrowserRouter>

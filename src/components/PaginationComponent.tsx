@@ -54,7 +54,6 @@ function PaginationComponent({
 
         return pages;
     };
-    console.log(getPageNumbers());
 
     return (
         <Pagination>

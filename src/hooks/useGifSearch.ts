@@ -7,8 +7,8 @@ interface UseGiphySearchReturn {
     gifs: APIResponse | null;
     loading: boolean;
     error: string | null;
-    searchGifs: (query: string, page: number) => void;
-    fetchTrendingGifs: (page: number) => void;
+    searchGifs: (query: string, page: number, tab: string) => void;
+    fetchTrendingGifs: (page: number, tab: string) => void;
 }
 
 export const useGiphySearch = (): UseGiphySearchReturn => {
@@ -35,14 +35,14 @@ export const useGiphySearch = (): UseGiphySearchReturn => {
         }
     };
 
-    const searchGifs = async (query: string, page: number) => {
-        const url = `${envConfig.apiEndpoint}/gifs/search?api_key=${envConfig.apiKey}&q=${query}&limit=10&offset=${page * 10}`;
+    const searchGifs = async (query: string, page: number, tab: string) => {
+        const url = `${envConfig.apiEndpoint}/${tab}/search?api_key=${envConfig.apiKey}&q=${query}&limit=10&offset=${page * 10}`;
         await fetchGiphy(url);
         navigate(`?q=${encodeURIComponent(query)}&page=${page}`, { replace: true });
     };
 
-    const fetchTrendingGifs = async (page: number) => {
-        const url = `${envConfig.apiEndpoint}/gifs/trending?api_key=${envConfig.apiKey}&limit=10&offset=${page * 10}`;
+    const fetchTrendingGifs = async (page: number, tab: string) => {
+        const url = `${envConfig.apiEndpoint}/${tab}/trending?api_key=${envConfig.apiKey}&limit=10&offset=${page * 10}`;
         await fetchGiphy(url); // N
         navigate("", { replace: true });
     };

@@ -1,27 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Datum } from "../dummyData/data";
-import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "../components/Pagination";
+
 import { Input } from "../components/Input";
 import { useGiphySearch } from "../hooks/useGifSearch";
 import useDebounce from "../hooks/useDebounce";
 import { Skeleton } from "../components/Skeleton";
 import { ITEMS_PER_PAGE } from "../constants";
-import PaginationComponent from "../components/PaginationComponent";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/Tabs";
+import GiphyList from "./GiphyList";
 
 const GiphySearch = () => {
     const [query, setQuery] = useState("");
     const [page, setPage] = useState(1);
     const location = useLocation();
+    const [selectedTab, setSelectedTab] = useState("gifs");
     const { gifs, loading, error, searchGifs, fetchTrendingGifs } = useGiphySearch();
-    // const [pagesList, setPagesList] = useState<Array<number>>([]);
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
@@ -36,11 +29,11 @@ const GiphySearch = () => {
 
     useEffect(() => {
         if (debounceQuery) {
-            searchGifs(debounceQuery, page);
+            searchGifs(debounceQuery, page, selectedTab);
         } else {
-            fetchTrendingGifs(page);
+            fetchTrendingGifs(page, selectedTab);
         }
-    }, [debounceQuery, page]);
+    }, [debounceQuery, page, selectedTab]);
 
     useEffect(() => {
         const totalCount = gifs?.pagination.total_count || 0;
@@ -54,7 +47,6 @@ const GiphySearch = () => {
     };
 
     const handlePageChange = (newPage: number) => {
-        console.log(newPage);
         setPage(Math.max(1, newPage));
     };
 
@@ -65,41 +57,47 @@ const GiphySearch = () => {
                 value={query}
                 onChange={handleQueryChange}
                 placeholder="Search for GIFs"
-                className="max-w-lg h-16 border-blue-300 rounded-xl"
+                className="max-w-lg h-16  rounded-xl"
             />
-
-            <span className="mt-8 text-2xl">
-                {gifs && (debounceQuery ? `Search Results: ${debounceQuery}` : "Trending")}
-            </span>
-
-            <div className="flex w-full mt-6  gap-4 flex-wrap justify-between mb-6 min-h-[500px]">
-                {error && <div className="text-red-500 mb-4 mt-6 text-center w-full">{error}</div>}
-                {loading
-                    ? Array.from(Array(10)).map((_, i) => {
-                          return (
-                              <Skeleton
-                                  key={i}
-                                  className="w-48 h-48"
-                              />
-                          );
-                      })
-                    : gifs?.data.map((gif: Datum) => (
-                          <img
-                              key={gif.id}
-                              src={gif.images.preview_gif.url}
-                              alt={gif.title}
-                              className="w-48 h-48 object-cover rounded"
-                          />
-                      ))}
-            </div>
-
-            {gifs && (
-                <PaginationComponent
-                    totalPages={50}
-                    currentPage={page}
-                    handlePageChange={handlePageChange}
-                />
-            )}
+            <Tabs
+                defaultValue="gifs"
+                className="w-full text-center mt-6"
+            >
+                <TabsList>
+                    <TabsTrigger
+                        value="gifs"
+                        onClick={() => setSelectedTab("gifs")}
+                    >
+                        GIFs
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="stickers"
+                        onClick={() => setSelectedTab("stickers")}
+                    >
+                        Stickers
+                    </TabsTrigger>
+                </TabsList>
+                <TabsContent value="gifs">
+                    <GiphyList
+                        gifs={gifs}
+                        debounceQuery={debounceQuery}
+                        error={error}
+                        loading={loading}
+                        handlePageChange={handlePageChange}
+                        page={page}
+                    />
+                </TabsContent>
+                <TabsContent value="stickers">
+                    <GiphyList
+                        gifs={gifs}
+                        debounceQuery={debounceQuery}
+                        error={error}
+                        loading={loading}
+                        handlePageChange={handlePageChange}
+                        page={page}
+                    />
+                </TabsContent>
+            </Tabs>
         </div>
     );
 };
