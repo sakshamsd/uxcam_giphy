@@ -1,7 +1,7 @@
-import { Skeleton } from "../components/Skeleton";
-import { APIResponse, Datum } from "../dummyData/data";
-import PaginationComponent from "../components/PaginationComponent";
-import { ITEMS_PER_PAGE } from "../constants";
+import { APIResponse, Datum } from "../../../dummyData/data";
+import PaginationComponent from "../../../components/ui/PaginationComponent";
+import { ITEMS_PER_PAGE } from "../../../constants";
+import { Skeleton } from "../../../components/library/Skeleton";
 
 interface GiphyListProps {
     gifs: APIResponse | null;

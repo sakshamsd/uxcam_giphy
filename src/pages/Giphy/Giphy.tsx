@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Input } from "../components/Input";
-import { useGiphySearch } from "../hooks/useGifSearch";
-import useDebounce from "../hooks/useDebounce";
-import GiphyList from "./GiphyList";
-import { Button } from "../components/Button";
-import img2 from "../assets/images/gifhub2.png";
-import { GIPHY_TABS } from "../constants";
-import Trending from "../assets/icons/Trending";
+import { useGiphySearch } from "../../hooks/useGifSearch";
+import useDebounce from "../../hooks/useDebounce";
+import GiphyList from "./_components/GiphyList";
+import img2 from "../../assets/images/gifhub2.png";
+import { GIPHY_TABS } from "../../constants";
+import Trending from "../../assets/icons/Trending";
+import { Input } from "../../components/library/Input";
+import { Button } from "../../components/library/Button";
 
 const GiphySearch = () => {
     const [query, setQuery] = useState("");
@@ -63,13 +63,16 @@ const GiphySearch = () => {
                 className=" w-full h-14 rounded-xl"
             />
             <div className="flex justify-between flex-row  w-full mt-8">
-                <span className="text-2xl">
+                <span className="text-2xl text-blue-400">
                     {gifs &&
                         (debounceQuery ? (
                             `Search Results: ${debounceQuery}`
                         ) : (
-                            <span className="flex flex-row gap-2">
-                                <Trending />
+                            <span className="flex flex-row gap-2 ">
+                                <span className="mt-1">
+                                    <Trending />
+                                </span>
+
                                 <span>Trending</span>
                             </span>
                         ))}

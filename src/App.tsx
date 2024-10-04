@@ -1,11 +1,11 @@
-import GiphySearch from "./pages/GiphySearch";
+import Giphy from "./pages/Giphy";
 import { BrowserRouter } from "react-router-dom";
 
 function App() {
     return (
         <BrowserRouter>
             <div className=" h-screen">
-                <GiphySearch />
+                <Giphy />
             </div>
         </BrowserRouter>
     );

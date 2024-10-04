@@ -7,9 +7,9 @@ import {
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
-} from "./Pagination";
-import { Pagination as PaginationType } from "../dummyData/data";
-import { ITEMS_PER_PAGE } from "../constants";
+} from "./../library/Pagination";
+import { Pagination as PaginationType } from "../../dummyData/data";
+import { ITEMS_PER_PAGE } from "../../constants";
 interface PaginationComponentProps {
     currentPage: number;
     handlePageChange: (_value: number) => void;
