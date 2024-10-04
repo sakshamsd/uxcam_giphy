@@ -8,18 +8,22 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "./Pagination";
+import { Pagination as PaginationType } from "../dummyData/data";
+import { ITEMS_PER_PAGE } from "../constants";
 interface PaginationComponentProps {
     currentPage: number;
-    totalPages: number;
     handlePageChange: (_value: number) => void;
+    pagination: PaginationType;
 }
 function PaginationComponent({
     currentPage,
-    totalPages,
     handlePageChange,
+    pagination,
 }: PaginationComponentProps) {
     const getPageNumbers = () => {
         const pages = [];
+        const totalCount = pagination.total_count || 0;
+        const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
         if (totalPages <= 7) {
             // If total pages is 7 or less, show all pages
@@ -61,7 +65,7 @@ function PaginationComponent({
                 <PaginationItem>
                     <PaginationPrevious onClick={() => handlePageChange(currentPage - 1)} />
                 </PaginationItem>
-                {getPageNumbers().map((page, i) => (
+                {getPageNumbers().map((page) => (
                     <Fragment key={`page-${page}`}>
                         {page === "ellipsis1" || page === "ellipsis2" ? (
                             <PaginationItem>

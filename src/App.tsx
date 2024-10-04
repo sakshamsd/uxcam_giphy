@@ -5,7 +5,6 @@ function App() {
     return (
         <BrowserRouter>
             <div className=" h-screen">
-              
                 <GiphySearch />
             </div>
         </BrowserRouter>

@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-
 import { Input } from "../components/Input";
 import { useGiphySearch } from "../hooks/useGifSearch";
 import useDebounce from "../hooks/useDebounce";
-import { Skeleton } from "../components/Skeleton";
-import { ITEMS_PER_PAGE } from "../constants";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/Tabs";
 import GiphyList from "./GiphyList";
+import { Button } from "../components/Button";
+import img2 from "../assets/images/gifhub2.png";
+import { GIPHY_TABS } from "../constants";
+import Trending from "../assets/icons/Trending";
 
 const GiphySearch = () => {
     const [query, setQuery] = useState("");
     const [page, setPage] = useState(1);
+
     const location = useLocation();
     const [selectedTab, setSelectedTab] = useState("gifs");
     const { gifs, loading, error, searchGifs, fetchTrendingGifs } = useGiphySearch();
@@ -19,7 +20,7 @@ const GiphySearch = () => {
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const searchTerm = params.get("q") || "";
-        const pageNum = parseInt(params.get("page") || "1", 10);
+        const pageNum = parseInt(params.get("page") || "1");
 
         setQuery(searchTerm);
         setPage(pageNum);
@@ -35,11 +36,6 @@ const GiphySearch = () => {
         }
     }, [debounceQuery, page, selectedTab]);
 
-    useEffect(() => {
-        const totalCount = gifs?.pagination.total_count || 0;
-        const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
-    }, [gifs?.pagination, page]);
-
     const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         setQuery(e.target.value);
@@ -51,53 +47,54 @@ const GiphySearch = () => {
     };
 
     return (
-        <div className="max-w-6xl mx-auto p-4 flex flex-col justify-center items-center">
+        <div className="max-w-5xl mx-auto flex flex-col justify-center items-center px-8">
+            <header className="w-full flex justify-center ">
+                <img
+                    src={img2}
+                    height={100}
+                    className="h-24"
+                />
+            </header>
             <Input
                 type="text"
                 value={query}
                 onChange={handleQueryChange}
-                placeholder="Search for GIFs"
-                className="max-w-lg h-16  rounded-xl"
+                placeholder="Search for GIFs and Stickers here..."
+                className=" w-full h-14 rounded-xl"
             />
-            <Tabs
-                defaultValue="gifs"
-                className="w-full text-center mt-6"
-            >
-                <TabsList>
-                    <TabsTrigger
-                        value="gifs"
-                        onClick={() => setSelectedTab("gifs")}
-                    >
-                        GIFs
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="stickers"
-                        onClick={() => setSelectedTab("stickers")}
-                    >
-                        Stickers
-                    </TabsTrigger>
-                </TabsList>
-                <TabsContent value="gifs">
-                    <GiphyList
-                        gifs={gifs}
-                        debounceQuery={debounceQuery}
-                        error={error}
-                        loading={loading}
-                        handlePageChange={handlePageChange}
-                        page={page}
-                    />
-                </TabsContent>
-                <TabsContent value="stickers">
-                    <GiphyList
-                        gifs={gifs}
-                        debounceQuery={debounceQuery}
-                        error={error}
-                        loading={loading}
-                        handlePageChange={handlePageChange}
-                        page={page}
-                    />
-                </TabsContent>
-            </Tabs>
+            <div className="flex justify-between flex-row  w-full mt-8">
+                <span className="text-2xl">
+                    {gifs &&
+                        (debounceQuery ? (
+                            `Search Results: ${debounceQuery}`
+                        ) : (
+                            <span className="flex flex-row gap-2">
+                                <Trending />
+                                <span>Trending</span>
+                            </span>
+                        ))}
+                </span>
+                <span className="flex gap-4 ">
+                    {GIPHY_TABS.map((button) => (
+                        <Button
+                            key={button.key}
+                            className="rounded-3xl "
+                            variant={selectedTab === button.key ? "default" : "secondary"}
+                            onClick={() => setSelectedTab(button.key)}
+                        >
+                            {button.label}
+                        </Button>
+                    ))}
+                </span>
+            </div>
+
+            <GiphyList
+                gifs={gifs}
+                error={error}
+                loading={loading}
+                handlePageChange={handlePageChange}
+                page={page}
+            />
         </div>
     );
 };

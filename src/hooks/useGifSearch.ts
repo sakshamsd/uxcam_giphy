@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { APIResponse } from "../dummyData/data";
-import { envConfig } from "../constants";
+import { envConfig, ITEMS_PER_PAGE } from "../constants";
 import { useNavigate } from "react-router-dom";
 
 interface UseGiphySearchReturn {
@@ -24,7 +24,9 @@ export const useGiphySearch = (): UseGiphySearchReturn => {
         try {
             const response = await fetch(endpoint);
             const data: APIResponse = await response.json();
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
             setGifs(data);
         } catch (err) {
@@ -36,14 +38,14 @@ export const useGiphySearch = (): UseGiphySearchReturn => {
     };
 
     const searchGifs = async (query: string, page: number, tab: string) => {
-        const url = `${envConfig.apiEndpoint}/${tab}/search?api_key=${envConfig.apiKey}&q=${query}&limit=10&offset=${page * 10}`;
+        const url = `${envConfig.apiEndpoint}/${tab}/search?api_key=${envConfig.apiKey}&q=${query}&limit=${ITEMS_PER_PAGE}&offset=${page * ITEMS_PER_PAGE}`;
         await fetchGiphy(url);
         navigate(`?q=${encodeURIComponent(query)}&page=${page}`, { replace: true });
     };
 
     const fetchTrendingGifs = async (page: number, tab: string) => {
-        const url = `${envConfig.apiEndpoint}/${tab}/trending?api_key=${envConfig.apiKey}&limit=10&offset=${page * 10}`;
-        await fetchGiphy(url); // N
+        const url = `${envConfig.apiEndpoint}/${tab}/trending?api_key=${envConfig.apiKey}&limit=${ITEMS_PER_PAGE}&offset=${page * ITEMS_PER_PAGE}`;
+        await fetchGiphy(url);
         navigate("", { replace: true });
     };
 
