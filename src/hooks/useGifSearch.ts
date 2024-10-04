@@ -44,7 +44,7 @@ export const useGiphySearch = (): UseGiphySearchReturn => {
     };
 
     const fetchTrendingGifs = async (page: number, tab: string) => {
-        const url = `${envConfig.apiEndpoint}/${tab}/trending?api_key=${envConfig.apiKey}&limit=${ITEMS_PER_PAGE}&offset=${page * ITEMS_PER_PAGE}`;
+        const url = `${envConfig.apiEndpoint}/${tab}/trending?api_key=${envConfig.apiKey}&limit=${ITEMS_PER_PAGE}&offset=${(page - 1) * ITEMS_PER_PAGE}`;
         await fetchGiphy(url);
         navigate("", { replace: true });
     };

@@ -46,6 +46,11 @@ const GiphySearch = () => {
         setPage(Math.max(1, newPage));
     };
 
+    const handleTabChange = (tab: string) => {
+        setSelectedTab(tab);
+        setPage(1);
+    };
+
     return (
         <div className="max-w-5xl mx-auto flex flex-col justify-center items-center px-8">
             <header className="w-full flex justify-center ">
@@ -83,7 +88,7 @@ const GiphySearch = () => {
                             key={button.key}
                             className="rounded-3xl "
                             variant={selectedTab === button.key ? "default" : "secondary"}
-                            onClick={() => setSelectedTab(button.key)}
+                            onClick={() => handleTabChange(button.key)}
                         >
                             {button.label}
                         </Button>
